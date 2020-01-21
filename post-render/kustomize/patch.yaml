@@ -1,0 +1,16 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: doesNotMatter
+spec:
+  template:
+    spec:
+      containers:
+        - name: my-security-container
+          image: "security-image:unintelligible-hash"
+          env:
+            - name: SECURITY_SCANNER_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: key
+                  name: security-scanner

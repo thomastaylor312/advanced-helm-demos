@@ -1,0 +1,21 @@
+image:
+  repository: ubuntu
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+securityContext: {}
+  privileged: true
+  runAsUser: 0
+
+resources: {}
+
+tolerations:
+  - key: node-role.kubernetes.io/master
+    effect: NoSchedule
+
+prePullImages: 
+  - mcr.microsoft.com/dotnet/core/aspnet:latest
+  - mysql:latest
