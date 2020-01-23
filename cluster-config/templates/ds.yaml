@@ -17,31 +17,31 @@ spec:
         - name: {{ .Chart.Name }}
           command:
             - bash
-            - /var/run/custom_config/dns.sh
+            - /var/run/custom_config/configure.sh
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
-          - name: docker-sock
-            mountPath: /var/run/docker.sock
           - name: dbus-sock
             mountPath: /var/run/dbus/system_bus_socket
           - name: scripts
             mountPath: /var/run/custom_config
+          - name: systemd
+            mountPath: /etc/systemd/system
     {{- with .Values.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}
       volumes:
-        - name: docker-sock
-          hostPath:
-            path: /var/run/docker.sock
         - name: dbus-sock
           hostPath:
             path: /var/run/dbus/system_bus_socket
         - name: scripts
           configMap:
-            name: dns-script
+            name: configure-script
+        - name: systemd
+          hostPath:
+            path: /etc/systemd/system

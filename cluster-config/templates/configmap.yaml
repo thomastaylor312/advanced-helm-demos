@@ -1,24 +1,36 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: dns-script
+  name: configure-script
   labels:
     {{- include "cluster-config.labels" . | nindent 4 }}
 data:
-  dns.sh: |
-    !#/bin/bash
-
-    # Prepull big images
-    {{- range .Values.prePullImages -}}
-    docker pull {{ . }}
-    {{- end -}}
+  configure.sh: |
+    set -euo pipefail
 
     # Add hello service
-    echo "
-    service stuff
-    " > /etc/system/...
+    echo "[Unit]
+    Description=Say Hello World
+    After=multi-user.target
+
+    [Service]
+    Type=oneshot
+    ExecStart=/bin/bash -c '/bin/echo "Hello World"'
+    ExecStart=/bin/sleep 60
+    ExecStart=/bin/bash -c '/bin/echo \"Waited for 1 minute\"'
+
+    [Install]
+    WantedBy=multi-user.target
+    " > /etc/systemd/system/hello-world.service
+
+    # Install gdbus
+    apt-get update && apt-get install -y libglib2.0-bin
 
     # Enable hello service with dbus
-    /var/run/dbus/system_bus_socket
+    gdbus call --system --dest org.freedesktop.systemd1 --object-path /org/freedesktop/systemd1 --method org.freedesktop.systemd1.Manager.EnableUnitFiles '["hello-world.service"]' false true
 
     # dbus start hello service
+    gdbus call --system --dest org.freedesktop.systemd1 --object-path /org/freedesktop/systemd1 --method org.freedesktop.systemd1.Manager.StartUnit hello-world.service "fail"
+
+    # HACK: sleep forever so as to not run again.
+    sleep 100000000
