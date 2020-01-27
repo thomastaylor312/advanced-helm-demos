@@ -19,8 +19,13 @@ set -o nounset
 set -o pipefail
 
 SCRIPT_ROOT=$(dirname "${BASH_SOURCE[0]}")/..
-CODEGEN_PKG=${CODEGEN_PKG:-$(cd "${SCRIPT_ROOT}"; ls -d -1 ./vendor/k8s.io/code-generator 2>/dev/null || echo ../code-generator)}
 MODULE_PATH="github.com/thomastaylor312/advanced-helm-demos/controller"
+
+# Get things in place for the code gen
+pushd $(dirname "${BASH_SOURCE[0]}")
+go mod vendor
+popd
+CODEGEN_PKG=${CODEGEN_PKG:-$(ls -d -1 "$(dirname "${BASH_SOURCE[0]}")"/vendor/k8s.io/code-generator 2>/dev/null || echo ../code-generator)}
 
 # generate the code with:
 # --output-base    because this script should also be able to run inside the vendor dir of

@@ -19,13 +19,14 @@ type Helm struct {
 
 // HelmSpec is the spec for a Helm resource
 type HelmSpec struct {
-	ChartName string `json:"chartName"`
-	Replicas  int32  `json:"replicas"`
+	ImageName string `json:"imageName"`
+	Replicas  *int32 `json:"replicas"`
 }
 
 // HelmStatus is the status for a Helm resource
 type HelmStatus struct {
 	ReleaseStatus release.Status `json:"releaseStatus"`
+	Message       string         `json:"message"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
