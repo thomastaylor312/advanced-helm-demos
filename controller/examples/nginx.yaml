@@ -4,3 +4,4 @@ metadata:
   name: nginx-test
 spec:
   imageName: nginx
+  replicas: 1

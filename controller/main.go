@@ -34,7 +34,7 @@ func main() {
 
 	helmInformerFactory.Start(ctx.Done())
 
-	if err = controller.Run(2, ctx.Done()); err != nil {
+	if err = controller.Run(1, ctx.Done()); err != nil {
 		log.Fatalf("Error running controller: %s", err.Error())
 	}
 }
