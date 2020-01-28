@@ -20,6 +20,11 @@ to Docker Hub. It should be as simple as running:
 $ make deploy
 ```
 
+Once the controller is running, you can apply the various Helm CRDs in the
+`examples/` directory using `kubectl apply -f`. Once you create those objects,
+you'll see the various services, pods, and deployments spin up. You should see
+the same number of pods as specified in the `replicas` field of the CRD.
+
 ## Building your own
 If you want to build your own image or mess around with the code, you need to
 log in to a container registry of your choice and set the `IMAGE_ORG`,
