@@ -5,4 +5,4 @@ patches:
   - path: patch.yaml
     target:
       kind: Deployment
-      name: "*"
+      name: ".*"
